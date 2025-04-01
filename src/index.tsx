@@ -1,19 +1,44 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./styles/index.css";
+import "./locates/i18n"
+import { Provider } from "react-redux";
+import store from "./store/store";
+import { worker } from "./mocks/browser";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// worker.start({ onUnhandledRequest: "warn" }).then(() => {
+//   const root = ReactDOM.createRoot(document.getElementById('root')!);
+//   root.render(
+//     <Provider store={store}>
+//       <React.StrictMode>
+//         <App />
+//       </React.StrictMode>
+//     </Provider>
+//   );
+// });
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const enableMocking = async () => {
+  const { worker } = await import("./mocks/browser");
+  await worker.start({ onUnhandledRequest: "warn" });
+
+};
+
+enableMocking().then(() => {
+  const root = ReactDOM.createRoot(document.getElementById("root")!);
+  root.render(
+    <Provider store={store}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Provider>
+  );
+});
+
+// ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+//   <Provider store={store}>
+//     <React.StrictMode>
+//       <App />
+//     </React.StrictMode>
+//   </Provider>
+// );
